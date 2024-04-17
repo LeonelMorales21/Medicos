@@ -1,0 +1,47 @@
+﻿@using Medico.Models
+@inject ICitas iCitas
+
+
+@if (citas.Count > 0)
+{
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Citas de hoy</h5>
+            <ul class="list-group list-group-light">
+
+                @foreach(var cita in citas)
+                {
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="fw-bold">@cita.Paciente.Nombre @cita.Paciente.SegundoApellido</div>
+                            <div class="text-muted">@cita.Fecha</div>
+                        </div>
+                        @if (cita.Fecha > DateTime.Now)
+                        {
+                            <span class="badge rounded-pill badge-success">Proxima</span>
+                        }else{
+                            <span class="badge rounded-pill badge-warning">Expirada</span>
+                        }
+                        
+                    </li>
+                }
+
+            </ul>
+        </div>
+    </div>
+}
+else
+{
+    <p>Loading...</p>   
+}
+
+@code {
+    List<Cita> citas = new List<Cita>();
+
+    //Este metodo se carga cuando se inizaliza el componente.
+
+    protected override async Task OnInitializedAsync()
+    {
+        citas = await iCitas.ObtenerCitasHoy();  
+    }
+}
